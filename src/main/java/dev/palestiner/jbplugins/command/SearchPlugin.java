@@ -9,6 +9,7 @@ import org.springframework.shell.command.CommandRegistration;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.support.Itemable;
 import org.springframework.shell.component.support.SelectorItem;
+import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.commands.Quit;
 import org.springframework.stereotype.Component;
@@ -64,8 +65,11 @@ public class SearchPlugin extends AbstractShellComponent implements CommandRegis
                             .map(Itemable::getItem)
                             .orElseThrow(() -> new IllegalStateException("No IDE found"));
                     downloadPlugin(pluginVersion, family);
-                    quit.quit();
-                    return pluginVersion;
+                    InteractionMode mode = ctx.getShellContext().getInteractionMode();
+                    if (mode.equals(InteractionMode.INTERACTIVE)) {
+                        quit.quit();
+                    }
+                    return "";
                 })
                 .and()
                 .withOption()
