@@ -1,0 +1,18 @@
+spring:
+  shell:
+    history:
+      name: ${HOME}/${spring.application.name}.log
+    interactive:
+      enabled: true
+  application:
+    name: jb-plugins
+
+plugin:
+  urls:
+    search: https://plugins.jetbrains.com/api/searchPlugins?excludeTags=internal&excludeTags=theme&products=idea&search=%s
+    version: https://plugins.jetbrains.com/api/plugins/%s/updates?size=1000
+    download: https://downloads.marketplace.jetbrains.com/files/%s?family=%s
+
+logging:
+  level:
+    root: off
