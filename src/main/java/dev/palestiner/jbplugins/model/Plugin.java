@@ -1,25 +1,18 @@
 package dev.palestiner.jbplugins.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nonnull;
 
-import java.util.ArrayList;
 import java.util.StringJoiner;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record Plugin(
         int id,
         String xmlId,
-        String link,
         String name,
-        String preview,
         int downloads,
-        String pricingModel,
-        String icon,
-        String previewImage,
-        long cdate,
         double rating,
-        boolean hasSource,
-        ArrayList<String> tags,
-        Vendor vendor
+        boolean hasSource
 ) {
 
     @Override
