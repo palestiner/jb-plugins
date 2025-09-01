@@ -1,6 +1,8 @@
 package dev.palestiner.jbplugins.service;
 
 import org.jline.terminal.Terminal;
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStyle;
 import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
@@ -23,10 +25,11 @@ public class DownloadProgressBar {
         int percentage = (int) ((downloadedBytes * 100) / totalBytes);
         int barLength = 50;
         int filledLength = (percentage * barLength) / 100;
-        String filled = "█".repeat(filledLength);
+        String filled = new AttributedString(
+                "█".repeat(filledLength),
+                AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN)
+        ).toAnsi();
         String empty = "░".repeat(barLength - filledLength);
-
-
         writer.printf("\rDownloading: [%s%s] %d%%", filled, empty, percentage);
         writer.flush();
     }
