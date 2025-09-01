@@ -3,6 +3,7 @@ package dev.palestiner.jbplugins.service.selector;
 import org.jline.terminal.Terminal;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.component.SingleItemSelector;
+import static org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
 import org.springframework.shell.component.support.Itemable;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.style.TemplateExecutor;
@@ -24,7 +25,7 @@ public class IdeFamilySelectorService extends AbstractSelectorService<String> {
 
 
     @Override
-    public SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context(
+    public SingleItemSelectorContext<String, SelectorItem<String>> context(
             ResourceLoader resourceLoader,
             List<String> items
     ) {
@@ -34,7 +35,7 @@ public class IdeFamilySelectorService extends AbstractSelectorService<String> {
                         .map(fieldName -> SelectorItem.of(fieldName, fieldName))
                         .toList(),
                 "Select IDE",
-                Comparator.comparing(Itemable::getItem)
+                null
         );
         selector.setResourceLoader(resourceLoader);
         selector.setTemplateExecutor(templateExecutor);

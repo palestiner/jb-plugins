@@ -77,6 +77,7 @@ public class SearchPlugin extends AbstractShellComponent implements CommandRegis
     private List<String> extractFamily(PluginVersion pluginVersion) {
         Iterable<String> names = () -> pluginVersion.compatibleVersions().fieldNames();
         return StreamSupport.stream(names.spliterator(), false)
+                .sorted(String::compareTo)
                 .toList();
     }
 
