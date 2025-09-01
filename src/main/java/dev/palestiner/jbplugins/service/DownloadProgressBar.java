@@ -1,22 +1,34 @@
 package dev.palestiner.jbplugins.service;
 
+import org.jline.terminal.Terminal;
 import org.springframework.stereotype.Component;
+
+import java.io.PrintWriter;
 
 @Component
 public class DownloadProgressBar {
 
+    private final PrintWriter writer;
+
+    public DownloadProgressBar(Terminal terminal) {
+        this.writer = terminal.writer();
+    }
+
     public void display(long downloadedBytes, long totalBytes) {
         if (totalBytes <= 0) {
-            System.out.print("\rDownloading...");
+            writer.print("\rDownloading...");
+            writer.flush();
             return;
         }
         int percentage = (int) ((downloadedBytes * 100) / totalBytes);
         int barLength = 50;
         int filledLength = (percentage * barLength) / 100;
-        String filled = new String(new char[filledLength]).replace('\0', '#');
-        String empty = new String(new char[barLength - filledLength]).replace('\0', '-');
+        String filled = "█".repeat(filledLength);
+        String empty = "░".repeat(barLength - filledLength);
 
-        System.out.printf("\rDownloading: [%s%s] %d%%", filled, empty, percentage);
+
+        writer.printf("\rDownloading: [%s%s] %d%%", filled, empty, percentage);
+        writer.flush();
     }
 
 }
