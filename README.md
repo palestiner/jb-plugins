@@ -42,7 +42,7 @@ If you have the source code and want to build the project yourself:
    ./target/jb-plugins
    ```
 
-### Download
+### Download (macOS ARM)
 
 1. Download file `jb-plugins` from project root
 2. Copy to `/opt/local/bin`:
