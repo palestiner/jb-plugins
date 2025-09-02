@@ -3,26 +3,20 @@ package dev.palestiner.jbplugins.state;
 import dev.palestiner.jbplugins.service.PluginService;
 import org.springframework.shell.context.InteractionMode;
 
-public class DownloadAndFinishState implements SearchPluginState {
-
-    private final PluginService pluginService;
-
-    public DownloadAndFinishState(PluginService pluginService) {
-        this.pluginService = pluginService;
-    }
+public record DownloadAndFinishState(PluginService pluginService) implements SearchPluginState {
 
     @Override
     public String process(PluginDownloadContext context) {
-        pluginService.downloadPlugin(context.getPluginVersion(), context.getFamily());
-        if (context.getInteractionMode().equals(InteractionMode.INTERACTIVE)) {
-            context.getQuitHandler().quit();
+        pluginService.downloadPlugin(context.getSelectedPluginVersion(), context.getFamily());
+        if (context.getCommandContext().getShellContext().getInteractionMode().equals(InteractionMode.INTERACTIVE)) {
+            context.getQuit().quit();
         }
         return "";
     }
 
     @Override
-    public int order() {
-        return 6;
+    public StateOrder order() {
+        return StateOrder.DOWNLOAD_AND_FINISH_STATE;
     }
 
 }

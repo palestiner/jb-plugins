@@ -1,9 +1,7 @@
 package dev.palestiner.jbplugins.state;
 
-public interface SearchPluginState {
+public interface SearchPluginState extends OrderedState {
 
     String process(PluginDownloadContext context);
-
-    int order();
 
 }

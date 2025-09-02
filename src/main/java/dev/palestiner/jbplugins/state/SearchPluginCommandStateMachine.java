@@ -27,7 +27,7 @@ public record SearchPluginCommandStateMachine(List<SearchPluginState> states) {
                 new FamilySelectionState(ideFamilySelectorService, resourceLoader),
                 new DownloadAndFinishState(pluginService)
         );
-        searchPluginStates.sort(Comparator.comparing(SearchPluginState::order));
+        searchPluginStates.sort(Comparator.comparing(sps -> sps.order().value()));
         return new SearchPluginCommandStateMachine(searchPluginStates);
     }
 
