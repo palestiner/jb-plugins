@@ -14,7 +14,7 @@ A powerful, interactive Spring Shell command-line application designed to simpli
 
 Before you can run `jb-plugins`, ensure you have the following installed on your system:
 *   **Graal Java JDK 17 or higher**
-*   **GraalVM requirements**
+*   **GraalVM requirements**: [Windows](https://www.graalvm.org/latest/getting-started/windows/), [Other](https://www.graalvm.org/jdk24/reference-manual/native-image/)
 
 ## Installation (Building from Source)
 
