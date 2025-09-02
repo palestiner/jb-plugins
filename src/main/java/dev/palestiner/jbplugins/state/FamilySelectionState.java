@@ -1,7 +1,6 @@
 package dev.palestiner.jbplugins.state;
 
 import dev.palestiner.jbplugins.model.PluginVersion;
-import dev.palestiner.jbplugins.service.selector.IdeFamilySelectorService;
 import dev.palestiner.jbplugins.service.selector.SelectorService;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.component.support.Itemable;
@@ -9,21 +8,16 @@ import org.springframework.shell.component.support.Itemable;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-public class FamilySelectionState implements SearchPluginState {
-
-    private final SelectorService<String> ideFamilySelectorService;
-    private final ResourceLoader resourceLoader;
-
-    public FamilySelectionState(SelectorService<String> ideFamilySelectorService, ResourceLoader resourceLoader) {
-        this.ideFamilySelectorService = ideFamilySelectorService;
-        this.resourceLoader = resourceLoader;
-    }
+public record FamilySelectionState(
+        SelectorService<String> ideFamilySelectorService,
+        ResourceLoader resourceLoader
+) implements SearchPluginState {
 
     @Override
     public String process(PluginDownloadContext context) {
         var familyContext = ideFamilySelectorService.context(
                 resourceLoader,
-                extractFamily(context.getPluginVersion())
+                extractFamily(context.getSelectedPluginVersion())
         );
         if (familyContext == null) return "No IDE selected";
         context.setFamilyContext(familyContext);
@@ -35,8 +29,8 @@ public class FamilySelectionState implements SearchPluginState {
     }
 
     @Override
-    public int order() {
-        return 5;
+    public StateOrder order() {
+        return StateOrder.FAMILY_SELECTION_STATE;
     }
 
     private List<String> extractFamily(PluginVersion pluginVersion) {

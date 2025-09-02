@@ -6,13 +6,7 @@ import org.springframework.shell.component.support.Itemable;
 
 import java.util.List;
 
-public class VersionRetrievalState implements SearchPluginState {
-
-    private final PluginService pluginService;
-
-    public VersionRetrievalState(PluginService pluginService) {
-        this.pluginService = pluginService;
-    }
+public record VersionRetrievalState(PluginService pluginService) implements SearchPluginState {
 
     @Override
     public String process(PluginDownloadContext context) {
@@ -26,8 +20,8 @@ public class VersionRetrievalState implements SearchPluginState {
     }
 
     @Override
-    public int order() {
-        return 3;
+    public StateOrder order() {
+        return StateOrder.VERSION_RETRIEVAL_STATE;
     }
 
 }

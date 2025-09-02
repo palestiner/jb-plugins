@@ -50,12 +50,8 @@ public class SearchPlugin extends AbstractShellComponent implements CommandRegis
     }
 
     private String processCommand(CommandContext ctx) {
-        PluginDownloadContext context = new PluginDownloadContext(
-                ctx.getRawArgs(),
-                ctx.getShellContext().getInteractionMode(),
-                quit
-        );
-        SearchPluginCommandStateMachine stateMachine = SearchPluginCommandStateMachine.create(
+        var context = new PluginDownloadContext(ctx, quit);
+        var stateMachine = SearchPluginCommandStateMachine.create(
                 pluginService,
                 pluginSelectorService,
                 versionSelectorService,

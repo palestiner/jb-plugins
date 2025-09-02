@@ -5,15 +5,10 @@ import dev.palestiner.jbplugins.service.selector.SelectorService;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.component.support.Itemable;
 
-public class VersionSelectionState implements SearchPluginState {
-
-    private final SelectorService<PluginVersion> versionSelectorService;
-    private final ResourceLoader resourceLoader;
-
-    public VersionSelectionState(SelectorService<PluginVersion> versionSelectorService, ResourceLoader resourceLoader) {
-        this.versionSelectorService = versionSelectorService;
-        this.resourceLoader = resourceLoader;
-    }
+public record VersionSelectionState(
+        SelectorService<PluginVersion> versionSelectorService,
+        ResourceLoader resourceLoader
+) implements SearchPluginState {
 
     @Override
     public String process(PluginDownloadContext context) {
@@ -23,13 +18,13 @@ public class VersionSelectionState implements SearchPluginState {
         PluginVersion pluginVersion = versionContext.getResultItem()
                 .map(Itemable::getItem)
                 .orElseThrow(() -> new IllegalStateException("No plugin version found"));
-        context.setPluginVersion(pluginVersion);
+        context.setSelectedPluginVersion(pluginVersion);
         return null;
     }
 
     @Override
-    public int order() {
-        return 4;
+    public StateOrder order() {
+        return StateOrder.VERSION_SELECTION_STATE;
     }
 
 }

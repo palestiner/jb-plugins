@@ -3,8 +3,8 @@ package dev.palestiner.jbplugins.state;
 import dev.palestiner.jbplugins.model.Plugin;
 import dev.palestiner.jbplugins.model.PluginVersion;
 import lombok.Data;
+import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.component.support.SelectorItem;
-import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.commands.Quit;
 
 import java.util.List;
@@ -14,22 +14,21 @@ import static org.springframework.shell.component.SingleItemSelector.SingleItemS
 @Data
 public class PluginDownloadContext {
 
-    private String[] rawArgs;
-    private String pattern;
-    private List<Plugin> items;
-    private SingleItemSelectorContext<Plugin, SelectorItem<Plugin>> pluginContext;
-    private List<PluginVersion> pluginVersions;
-    private SingleItemSelectorContext<PluginVersion, SelectorItem<PluginVersion>> versionContext;
-    private PluginVersion pluginVersion;
-    private SingleItemSelectorContext<String, SelectorItem<String>> familyContext;
-    private String family;
-    private final InteractionMode interactionMode;
-    private final Quit quitHandler;
+    private final Quit quit;
+    private final CommandContext commandContext;
 
-    public PluginDownloadContext(String[] rawArgs, InteractionMode mode, Quit quitHandler) {
-        this.rawArgs = rawArgs;
-        this.interactionMode = mode;
-        this.quitHandler = quitHandler;
+    private String family;
+    private String searchPattern;
+    private List<Plugin> plugins;
+    private List<PluginVersion> pluginVersions;
+    private PluginVersion selectedPluginVersion;
+    private SingleItemSelectorContext<Plugin, SelectorItem<Plugin>> pluginContext;
+    private SingleItemSelectorContext<PluginVersion, SelectorItem<PluginVersion>> versionContext;
+    private SingleItemSelectorContext<String, SelectorItem<String>> familyContext;
+
+    public PluginDownloadContext(CommandContext commandContext, Quit quit) {
+        this.commandContext = commandContext;
+        this.quit = quit;
     }
 
 
