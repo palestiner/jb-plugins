@@ -22,23 +22,26 @@ import java.util.List;
 @Service
 public class PluginService {
 
-    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     private static final TypeReference<List<PluginVersion>> LIST_PLUGIN_VERSIONS_TYPE = new TypeReference<>() {};
     private static final TypeReference<List<Plugin>> LIST_PLUGINS_TYPE = new TypeReference<>() {};
     private final PluginProperties pluginProperties;
     private final ObjectMapper objectMapper;
     private final DownloadProgressBar progressBar;
     private final Terminal terminal;
+    private final HttpClient httpClient;
 
     public PluginService(
             PluginProperties pluginProperties,
             ObjectMapper objectMapper,
-            DownloadProgressBar progressBar, Terminal terminal
+            DownloadProgressBar progressBar,
+            Terminal terminal,
+            HttpClient httpClient
     ) {
         this.pluginProperties = pluginProperties;
         this.objectMapper = objectMapper;
         this.progressBar = progressBar;
         this.terminal = terminal;
+        this.httpClient = httpClient;
     }
 
     public List<Plugin> search(String pattern) {
@@ -47,7 +50,7 @@ public class PluginService {
                 .GET()
                 .build();
         try {
-            HttpResponse<String> send = HTTP_CLIENT.send(
+            HttpResponse<String> send = httpClient.send(
                     searchReq,
                     HttpResponse.BodyHandlers.ofString()
             );
@@ -65,7 +68,7 @@ public class PluginService {
                 .GET()
                 .build();
         try {
-            HttpResponse<String> send = HTTP_CLIENT.send(
+            HttpResponse<String> send = httpClient.send(
                     versionsReq,
                     HttpResponse.BodyHandlers.ofString()
             );
@@ -109,7 +112,7 @@ public class PluginService {
                 .GET()
                 .build();
         try {
-            return HTTP_CLIENT.send(
+            return httpClient.send(
                     downloadReq,
                     HttpResponse.BodyHandlers.ofInputStream()
             ).body();

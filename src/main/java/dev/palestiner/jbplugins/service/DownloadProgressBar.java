@@ -22,14 +22,14 @@ public class DownloadProgressBar {
             writer.flush();
             return;
         }
-        int percentage = (int) ((downloadedBytes * 100) / totalBytes);
+        int percentage = Math.min(100, (int) ((downloadedBytes * 100) / totalBytes));
         int barLength = 50;
         int filledLength = (percentage * barLength) / 100;
         String filled = new AttributedString(
                 "█".repeat(filledLength),
                 AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN)
         ).toAnsi();
-        String empty = "░".repeat(barLength - filledLength);
+        String empty = "░".repeat(Math.max(0, barLength - filledLength));
         writer.printf("\rDownloading: [%s%s] %d%%", filled, empty, percentage);
         writer.flush();
     }
