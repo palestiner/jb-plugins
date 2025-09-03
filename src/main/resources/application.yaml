@@ -9,7 +9,7 @@ spring:
 
 plugin:
   urls:
-    search: https://plugins.jetbrains.com/api/searchPlugins?excludeTags=internal&excludeTags=theme&products=idea&search=%s
+    search: https://plugins.jetbrains.com/api/searchPlugins?excludeTags=internal&search=%s
     version: https://plugins.jetbrains.com/api/plugins/%s/updates?size=1000
     download: https://downloads.marketplace.jetbrains.com/files/%s?family=%s
 
