@@ -4,7 +4,7 @@ public interface OrderedState {
 
     StateOrder order();
 
-    enum StateOrder implements Comparable<StateOrder> {
+    enum StateOrder {
         CHECK_ARGUMENTS_STATE(10),
         PLUGIN_SELECTION_STATE(20),
         VERSION_RETRIEVAL_STATE(30),
