@@ -12,9 +12,7 @@ public record CheckArgumentsState(PluginService pluginService) implements Search
     public String process(PluginDownloadContext context) {
         String pattern = searchPattern(context);
         if (pattern == null || pattern.isBlank()) return "Enter search pattern";
-        pattern = pattern.trim();
-        context.setSearchPattern(pattern);
-        List<Plugin> items = pluginService.search(pattern);
+        List<Plugin> items = pluginService.search(pattern.trim());
         if (items.isEmpty()) return "No items found";
         context.setPlugins(items);
         return null;

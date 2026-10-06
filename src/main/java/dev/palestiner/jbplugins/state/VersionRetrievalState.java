@@ -2,7 +2,6 @@ package dev.palestiner.jbplugins.state;
 
 import dev.palestiner.jbplugins.model.PluginVersion;
 import dev.palestiner.jbplugins.service.PluginService;
-import org.springframework.shell.component.support.Itemable;
 
 import java.util.List;
 
@@ -10,10 +9,7 @@ public record VersionRetrievalState(PluginService pluginService) implements Sear
 
     @Override
     public String process(PluginDownloadContext context) {
-        List<PluginVersion> pluginVersions = context.getPluginContext().getResultItem()
-                .map(Itemable::getItem)
-                .map(pluginService::pluginVersions)
-                .orElse(List.of());
+        List<PluginVersion> pluginVersions = pluginService.pluginVersions(context.getSelectedPlugin());
         if (pluginVersions.isEmpty()) return "No plugins available";
         context.setPluginVersions(pluginVersions);
         return null;

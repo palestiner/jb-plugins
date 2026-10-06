@@ -23,7 +23,6 @@ public record VersionSelectionState(
                         .map(Itemable::getItem)
                         .orElse(null);
         if (pluginVersion == null) return "No version selected";
-        context.setVersionContext(versionContext);
         context.setSelectedPluginVersion(pluginVersion);
         return null;
     }

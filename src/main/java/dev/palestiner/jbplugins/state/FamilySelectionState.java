@@ -30,7 +30,6 @@ public record FamilySelectionState(
                         .map(Itemable::getItem)
                         .orElse(null);
         if (family == null) return "No IDE selected";
-        context.setFamilyContext(familyContext);
         context.setFamily(family);
         return null;
     }

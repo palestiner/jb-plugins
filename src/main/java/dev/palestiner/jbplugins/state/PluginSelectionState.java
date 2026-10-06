@@ -3,6 +3,7 @@ package dev.palestiner.jbplugins.state;
 import dev.palestiner.jbplugins.model.Plugin;
 import dev.palestiner.jbplugins.service.selector.SelectorService;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.shell.component.support.Itemable;
 
 public record PluginSelectionState(
         SelectorService selectorService,
@@ -17,8 +18,12 @@ public record PluginSelectionState(
                 Plugin::name,
                 "Select plugin"
         );
-        if (pluginContext == null) return "No plugin selected";
-        context.setPluginContext(pluginContext);
+        Plugin plugin = pluginContext == null ? null
+                : pluginContext.getResultItem()
+                        .map(Itemable::getItem)
+                        .orElse(null);
+        if (plugin == null) return "No plugin selected";
+        context.setSelectedPlugin(plugin);
         return null;
     }
 
