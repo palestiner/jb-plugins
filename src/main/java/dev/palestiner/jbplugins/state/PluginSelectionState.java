@@ -5,13 +5,18 @@ import dev.palestiner.jbplugins.service.selector.SelectorService;
 import org.springframework.core.io.ResourceLoader;
 
 public record PluginSelectionState(
-        SelectorService<Plugin> pluginSelectorService,
+        SelectorService selectorService,
         ResourceLoader resourceLoader
 ) implements SearchPluginState {
 
     @Override
     public String process(PluginDownloadContext context) {
-        var pluginContext = pluginSelectorService.context(resourceLoader, context.getPlugins());
+        var pluginContext = selectorService.select(
+                resourceLoader,
+                context.getPlugins(),
+                Plugin::name,
+                "Select plugin"
+        );
         if (pluginContext == null) return "No plugin selected";
         context.setPluginContext(pluginContext);
         return null;

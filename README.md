@@ -13,7 +13,7 @@ A powerful, interactive Spring Shell command-line application designed to simpli
 ## Prerequisites
 
 Before you can run `jb-plugins`, ensure you have the following installed on your system:
-*   **Graal Java JDK 17 or higher**
+*   **Java JDK 21 or higher**
 *   **GraalVM requirements**: [Windows](https://www.graalvm.org/latest/getting-started/windows/), [Other](https://www.graalvm.org/jdk24/reference-manual/native-image/)
 
 ## Installation (Building from Source)
@@ -44,7 +44,7 @@ If you have the source code and want to build the project yourself:
 
 ### Download (macOS ARM)
 
-1. Download file `jb-plugins` from project root
+1. Download the `jb-plugins` binary from the [GitHub Releases page](https://github.com/palestiner/jb-plugins/releases)
 2. Copy to `/opt/local/bin`:
     ```bash
    sudo mv jb-plugins /opt/local/bin/jb-plugins

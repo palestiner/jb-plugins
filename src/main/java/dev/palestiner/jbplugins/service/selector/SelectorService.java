@@ -1,23 +1,52 @@
 package dev.palestiner.jbplugins.service.selector;
 
+import lombok.extern.slf4j.Slf4j;
+import org.jline.terminal.Terminal;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.support.SelectorItem;
+import org.springframework.shell.style.TemplateExecutor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static org.springframework.shell.component.SingleItemSelector.SingleItemSelectorContext;
 
-public interface SelectorService<T> {
+@Slf4j
+@Component
+public class SelectorService {
 
-    SingleItemSelectorContext<T, SelectorItem<T>> context(ResourceLoader resourceLoader, List<T> items);
+    private final Terminal terminal;
+    private final TemplateExecutor templateExecutor;
 
-    default <I extends SelectorItem<T>> SingleItemSelectorContext<T, I> runWithTry(SingleItemSelector<T, I> selector) {
+    public SelectorService(Terminal terminal, TemplateExecutor templateExecutor) {
+        this.terminal = terminal;
+        this.templateExecutor = templateExecutor;
+    }
+
+    public <T> SingleItemSelectorContext<T, SelectorItem<T>> select(
+            ResourceLoader resourceLoader,
+            List<T> items,
+            Function<T, String> label,
+            String title
+    ) {
+        var selector = new SingleItemSelector<>(
+                terminal,
+                items.stream()
+                        .map(item -> SelectorItem.of(label.apply(item), item))
+                        .toList(),
+                title,
+                null
+        );
+        selector.setResourceLoader(resourceLoader);
+        selector.setTemplateExecutor(templateExecutor);
         try {
-            return selector.run(SingleItemSelector.SingleItemSelectorContext.empty());
-        } catch (Throwable ignored) {
+            return selector.run(SingleItemSelectorContext.empty());
+        } catch (Exception e) {
+            log.warn("Selection '{}' failed: {}", title, e.getMessage());
+            return null;
         }
-        return null;
     }
 
 }

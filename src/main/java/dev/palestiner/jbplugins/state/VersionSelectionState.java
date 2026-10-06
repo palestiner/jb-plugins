@@ -6,18 +6,24 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.component.support.Itemable;
 
 public record VersionSelectionState(
-        SelectorService<PluginVersion> versionSelectorService,
+        SelectorService selectorService,
         ResourceLoader resourceLoader
 ) implements SearchPluginState {
 
     @Override
     public String process(PluginDownloadContext context) {
-        var versionContext = versionSelectorService.context(resourceLoader, context.getPluginVersions());
-        if (versionContext == null) return "No version selected";
+        var versionContext = selectorService.select(
+                resourceLoader,
+                context.getPluginVersions(),
+                PluginVersion::version,
+                "Select version"
+        );
+        PluginVersion pluginVersion = versionContext == null ? null
+                : versionContext.getResultItem()
+                        .map(Itemable::getItem)
+                        .orElse(null);
+        if (pluginVersion == null) return "No version selected";
         context.setVersionContext(versionContext);
-        PluginVersion pluginVersion = versionContext.getResultItem()
-                .map(Itemable::getItem)
-                .orElseThrow(() -> new IllegalStateException("No plugin version found"));
         context.setSelectedPluginVersion(pluginVersion);
         return null;
     }

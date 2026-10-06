@@ -1,7 +1,5 @@
 package dev.palestiner.jbplugins.state;
 
-import dev.palestiner.jbplugins.model.Plugin;
-import dev.palestiner.jbplugins.model.PluginVersion;
 import dev.palestiner.jbplugins.service.PluginService;
 import dev.palestiner.jbplugins.service.selector.SelectorService;
 import org.springframework.core.io.ResourceLoader;
@@ -14,17 +12,15 @@ public record SearchPluginCommandStateMachine(List<SearchPluginState> states) {
 
     public static SearchPluginCommandStateMachine create(
             PluginService pluginService,
-            SelectorService<Plugin> pluginSelectorService,
-            SelectorService<PluginVersion> versionSelectorService,
-            SelectorService<String> ideFamilySelectorService,
+            SelectorService selectorService,
             ResourceLoader resourceLoader
     ) {
         List<SearchPluginState> searchPluginStates = Arrays.asList(
                 new CheckArgumentsState(pluginService),
-                new PluginSelectionState(pluginSelectorService, resourceLoader),
+                new PluginSelectionState(selectorService, resourceLoader),
                 new VersionRetrievalState(pluginService),
-                new VersionSelectionState(versionSelectorService, resourceLoader),
-                new FamilySelectionState(ideFamilySelectorService, resourceLoader),
+                new VersionSelectionState(selectorService, resourceLoader),
+                new FamilySelectionState(selectorService, resourceLoader),
                 new DownloadAndFinishState(pluginService)
         );
         searchPluginStates.sort(Comparator.comparing(sps -> sps.order().value()));

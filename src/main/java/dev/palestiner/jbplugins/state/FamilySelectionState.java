@@ -1,29 +1,36 @@
 package dev.palestiner.jbplugins.state;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import dev.palestiner.jbplugins.model.PluginVersion;
 import dev.palestiner.jbplugins.service.selector.SelectorService;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.shell.component.support.Itemable;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 public record FamilySelectionState(
-        SelectorService<String> ideFamilySelectorService,
+        SelectorService selectorService,
         ResourceLoader resourceLoader
 ) implements SearchPluginState {
 
     @Override
     public String process(PluginDownloadContext context) {
-        var familyContext = ideFamilySelectorService.context(
+        List<String> families = extractFamilies(context.getSelectedPluginVersion());
+        if (families.isEmpty()) return "No compatible IDEs found";
+        var familyContext = selectorService.select(
                 resourceLoader,
-                extractFamily(context.getSelectedPluginVersion())
+                families,
+                family -> family,
+                "Select IDE"
         );
-        if (familyContext == null) return "No IDE selected";
+        String family = familyContext == null ? null
+                : familyContext.getResultItem()
+                        .map(Itemable::getItem)
+                        .orElse(null);
+        if (family == null) return "No IDE selected";
         context.setFamilyContext(familyContext);
-        String family = familyContext.getResultItem()
-                .map(Itemable::getItem)
-                .orElseThrow(() -> new IllegalStateException("No IDE found"));
         context.setFamily(family);
         return null;
     }
@@ -33,10 +40,14 @@ public record FamilySelectionState(
         return StateOrder.FAMILY_SELECTION_STATE;
     }
 
-    private List<String> extractFamily(PluginVersion pluginVersion) {
-        Iterable<String> names = () -> pluginVersion.compatibleVersions().fieldNames();
+    private List<String> extractFamilies(PluginVersion pluginVersion) {
+        JsonNode compatibleVersions = pluginVersion.compatibleVersions();
+        if (compatibleVersions == null || compatibleVersions.isNull() || compatibleVersions.isMissingNode()) {
+            return List.of();
+        }
+        Iterable<String> names = () -> compatibleVersions.fieldNames();
         return StreamSupport.stream(names.spliterator(), false)
-                .sorted(String::compareTo)
+                .sorted(Comparator.naturalOrder())
                 .toList();
     }
 

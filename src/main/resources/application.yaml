@@ -8,6 +8,8 @@ spring:
     name: jb-plugins
 
 plugin:
+  http:
+    insecure: false
   urls:
     search: https://plugins.jetbrains.com/api/searchPlugins?excludeTags=internal&search=%s
     version: https://plugins.jetbrains.com/api/plugins/%s/updates?size=1000
@@ -15,4 +17,4 @@ plugin:
 
 logging:
   level:
-    root: off
+    root: warn
