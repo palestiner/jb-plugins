@@ -9,6 +9,7 @@ import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.command.CommandContext;
 import org.springframework.shell.command.CommandRegistration;
+import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 import org.springframework.shell.standard.commands.Quit;
 import org.springframework.stereotype.Component;
@@ -45,14 +46,15 @@ public class SearchPlugin extends AbstractShellComponent implements CommandRegis
     }
 
     private String processCommand(CommandContext ctx) {
-        var context = new PluginDownloadContext(ctx, quit);
+        var context = new PluginDownloadContext(ctx);
+        String result;
         try {
             var stateMachine = SearchPluginCommandStateMachine.create(
                     pluginService,
                     selectorService,
                     getResourceLoader()
             );
-            return stateMachine.execute(context);
+            result = stateMachine.execute(context);
         } catch (MarketplaceException e) {
             log.warn("Marketplace error: {}", e.getMessage());
             return e.getMessage();
@@ -60,6 +62,11 @@ public class SearchPlugin extends AbstractShellComponent implements CommandRegis
             log.error("Unexpected error", e);
             return "Unexpected error: " + e.getMessage();
         }
+        if (result.isEmpty()
+                && ctx.getShellContext().getInteractionMode() == InteractionMode.INTERACTIVE) {
+            quit.quit();
+        }
+        return result;
     }
 
 }
