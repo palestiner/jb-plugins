@@ -32,7 +32,7 @@ public class SelectorService {
             Function<T, String> label,
             String title
     ) {
-        var selector = new SingleItemSelector<>(
+        var selector = new EmacsSingleItemSelector<>(
                 terminal,
                 items.stream()
                         .map(item -> SelectorItem.of(label.apply(item), item))
