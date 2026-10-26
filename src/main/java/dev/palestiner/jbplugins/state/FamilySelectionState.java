@@ -44,7 +44,7 @@ public record FamilySelectionState(
         if (compatibleVersions == null || compatibleVersions.isNull() || compatibleVersions.isMissingNode()) {
             return List.of();
         }
-        Iterable<String> names = () -> compatibleVersions.fieldNames();
+        Iterable<String> names = compatibleVersions::fieldNames;
         return StreamSupport.stream(names.spliterator(), false)
                 .sorted(Comparator.naturalOrder())
                 .toList();

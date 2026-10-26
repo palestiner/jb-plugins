@@ -136,7 +136,7 @@ public class PluginService {
                     downloadReq,
                     HttpResponse.BodyHandlers.ofInputStream()
             );
-            if (!isOk(send)) {
+            if (isNotOk(send)) {
                 try {
                     send.body().close();
                 } catch (IOException ignored) {
@@ -197,13 +197,13 @@ public class PluginService {
         return url;
     }
 
-    private boolean isOk(HttpResponse<?> response) {
+    private boolean isNotOk(HttpResponse<?> response) {
         int status = response.statusCode();
-        return status >= 200 && status < 300;
+        return status < 200 || status >= 300;
     }
 
     private void requireOk(HttpResponse<?> response, String operation) {
-        if (!isOk(response)) {
+        if (isNotOk(response)) {
             throw new MarketplaceException(
                     "JetBrains Marketplace returned HTTP " + response.statusCode() + " for " + operation
             );

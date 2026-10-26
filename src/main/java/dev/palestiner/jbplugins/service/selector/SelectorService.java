@@ -8,6 +8,7 @@ import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.style.TemplateExecutor;
 import org.springframework.stereotype.Component;
 
+import java.io.IOError;
 import java.util.List;
 import java.util.function.Function;
 
@@ -43,6 +44,9 @@ public class SelectorService {
         selector.setTemplateExecutor(templateExecutor);
         try {
             return selector.run(SingleItemSelectorContext.empty());
+        } catch (IOError e) {
+            // TODO Right Ctrl-C handling
+            return null;
         } catch (Exception e) {
             log.warn("Selection '{}' failed: {}", title, e.getMessage());
             return null;
